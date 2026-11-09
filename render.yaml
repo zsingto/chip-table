@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: chip-table
+    runtime: node
+    plan: free
+    buildCommand: echo ok
+    startCommand: node server.js

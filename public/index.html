@@ -1,0 +1,423 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0a2a21">
+<title>โต๊ะชิปดีลเลอร์</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600&display=swap">
+<style>
+:root{
+  --felt:#0f3b2e; --felt-deep:#0a2a21; --rail:#1a1410; --ivory:#f3ecd9; --muted:#a8bcae;
+  --brass:#d9a441; --brass-ink:#2a1d05; --danger:#e0604f; --ok:#7fd1a0; --line:rgba(243,236,217,.14);
+  --card:rgba(0,0,0,.22); --card-sel:rgba(217,164,65,.16);
+  --c1:#ecebe6; --c5:#c8362f; --c25:#2f8a4a; --c100:#1d1d1d; --c500:#6c3fa0;
+  --f-num:"Chakra Petch","IBM Plex Sans Thai",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans Thai",system-ui,sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{min-height:100%}
+body{margin:0;background:radial-gradient(120% 80% at 50% 0%,var(--felt) 0%,var(--felt-deep) 70%) fixed;background-color:var(--felt-deep);color:var(--ivory);font-family:var(--f-body);font-size:15px;
+  padding:env(safe-area-inset-top,0px) max(16px,env(safe-area-inset-right,0px)) 0 max(16px,env(safe-area-inset-left,0px))}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+button:focus-visible,input:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
+input{font:inherit}
+.wrap{max-width:760px;margin:0 auto;padding-block:14px 270px;display:flex;flex-direction:column;gap:16px}
+.home{padding-block:28px 40px}
+.brand{font-family:var(--f-num);font-size:30px;margin:0;letter-spacing:.02em}
+.brand small{display:block;font-family:var(--f-body);font-size:15px;color:var(--muted);font-weight:400;margin-top:4px}
+.card{padding:18px;border-radius:18px;background:rgba(0,0,0,.28);border:1px solid var(--line);display:flex;flex-direction:column;gap:12px}
+.card h2{margin:0;font-family:var(--f-num);font-size:20px}
+.field{display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--muted)}
+.field input{width:100%;background:rgba(255,255,255,.07);border:1px solid var(--line);border-radius:10px;color:var(--ivory);padding:12px;font-size:16px}
+.field input.code{font-family:var(--f-num);letter-spacing:.3em;text-transform:uppercase;font-size:22px}
+header{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.hl{display:flex;flex-direction:column;gap:2px;min-width:0}
+.room{font-family:var(--f-num);font-size:20px;letter-spacing:.12em}
+.hand{font-size:12px;color:var(--muted)}
+.hand b{color:var(--brass);font-weight:500}
+.hbtns{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.ghost{padding:8px 11px;border:1px solid var(--line);border-radius:10px;font-size:14px}
+.ghost:disabled{opacity:.35;cursor:default}
+.banner{padding:10px 14px;border-radius:12px;background:rgba(0,0,0,.28);border:1px solid var(--line);font-size:14px;color:var(--muted)}
+.pot{display:flex;flex-direction:column;align-items:center;gap:2px;padding:18px 12px;border-radius:999px;border:2px solid rgba(217,164,65,.45);background:rgba(0,0,0,.18)}
+.pot small{letter-spacing:.2em;color:var(--brass);font-family:var(--f-num);font-size:12px}
+.pot b{font-family:var(--f-num);font-size:44px;line-height:1.05;font-variant-numeric:tabular-nums}
+.pot .sub{color:var(--muted);font-size:13px}
+.seats{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px}
+.empty{grid-column:1/-1;text-align:center;color:var(--muted);padding:24px;border:1.5px dashed var(--line);border-radius:14px;line-height:1.6}
+.seat{position:relative;text-align:left;padding:12px;border-radius:14px;background:var(--card);border:1.5px solid transparent;display:flex;flex-direction:column;gap:4px;min-width:0}
+.seat.sel{border-color:var(--brass);background:var(--card-sel)}
+.seat.me{border-color:var(--ok)}
+.seat.fold{opacity:.45}
+.seat .nm{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:30px}
+.seat .nm i{font-style:normal;font-size:11px;color:var(--ok);margin-left:5px}
+.seat .ch{font-family:var(--f-num);font-size:22px;font-variant-numeric:tabular-nums}
+.seat .bt{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.seat .bt em{font-style:normal;color:var(--brass);font-family:var(--f-num)}
+.tag{position:absolute;top:10px;right:10px;font-family:var(--f-num);font-size:11px;padding:2px 7px;border-radius:999px}
+.tag.d{background:var(--ivory);color:#111}
+.tag.f{background:var(--danger);color:#fff}
+.tag.a{background:var(--brass);color:var(--brass-ink)}
+.tag.o{background:#555;color:#fff}
+.console{position:fixed;left:0;right:0;bottom:0;background:var(--rail);border-top:2px solid rgba(217,164,65,.35);z-index:5;
+  padding:12px max(16px,env(safe-area-inset-right,0px)) calc(12px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.console .in{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:10px}
+.who{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-size:14px;color:var(--muted)}
+.who b{color:var(--ivory);font-weight:600}
+.chips{display:flex;gap:8px;align-items:center}
+.chip{flex:1;aspect-ratio:1;max-width:56px;border-radius:50%;font-family:var(--f-num);font-weight:700;font-size:14px;color:#fff;
+  border:4px dashed rgba(255,255,255,.75);box-shadow:inset 0 0 0 3px rgba(0,0,0,.25)}
+.chip:active{transform:scale(.92)}
+.chip[data-v="1"]{background:var(--c1);color:#222;border-color:#999}
+.chip[data-v="5"]{background:var(--c5)}.chip[data-v="25"]{background:var(--c25)}
+.chip[data-v="100"]{background:var(--c100)}.chip[data-v="500"]{background:var(--c500)}
+.amt{flex:1.6;min-width:0;display:flex;align-items:center;background:rgba(255,255,255,.06);border-radius:10px;padding:0 8px}
+.amt input{width:100%;min-width:0;background:none;border:0;color:var(--ivory);font-family:var(--f-num);font-size:22px;padding:8px 0;font-variant-numeric:tabular-nums}
+.amt button{color:var(--muted);font-size:13px;padding:6px}
+.acts{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.btn{padding:12px 6px;border-radius:12px;font-weight:600;font-size:14px;background:rgba(255,255,255,.08);line-height:1.2}
+.btn small{display:block;font-weight:400;font-size:11px;color:var(--muted);font-family:var(--f-num)}
+.btn.pri{background:var(--brass);color:var(--brass-ink)}
+.btn.pri small{color:var(--brass-ink);opacity:.75}
+.btn.warn{color:var(--danger)}
+.btn:disabled{opacity:.3;cursor:default}
+.pay{width:100%;padding:14px;border-radius:12px;background:var(--ivory);color:#1a1410;font-weight:600;font-size:16px}
+.pay:disabled{opacity:.3}
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:flex-end;justify-content:center;z-index:20}
+.sheet{background:var(--rail);width:100%;max-width:640px;max-height:88%;overflow:auto;border-radius:18px 18px 0 0;
+  padding:18px max(16px,env(safe-area-inset-right,0px)) calc(18px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));display:flex;flex-direction:column;gap:14px}
+.sheet h2{margin:0;font-family:var(--f-num);font-size:20px;letter-spacing:.03em}
+.sheet h3{margin:0;font-size:13px;color:var(--muted);font-weight:500;letter-spacing:.06em}
+.bigcode{font-family:var(--f-num);font-size:48px;letter-spacing:.25em;text-align:center;color:var(--brass);padding:6px 0}
+.linkbox{font-family:var(--f-num);font-size:14px;background:rgba(255,255,255,.06);border-radius:10px;padding:10px;word-break:break-all;user-select:all}
+.row{display:flex;gap:8px;align-items:center}
+.row input{min-width:0;background:rgba(255,255,255,.07);border:1px solid var(--line);border-radius:10px;color:var(--ivory);padding:10px}
+.row input.n{width:110px;font-family:var(--f-num);font-variant-numeric:tabular-nums}
+.row input.t{flex:1}
+.x{padding:10px 12px;color:var(--danger)}
+.potbox{border:1px solid var(--line);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:10px}
+.potbox .hd{display:flex;justify-content:space-between;font-family:var(--f-num)}
+.potbox .hd b{color:var(--brass);font-size:20px;font-variant-numeric:tabular-nums}
+.pills{display:flex;flex-wrap:wrap;gap:8px}
+.pill{padding:9px 14px;border-radius:999px;border:1.5px solid var(--line);font-size:14px}
+.pill.on{background:var(--brass);color:var(--brass-ink);border-color:var(--brass);font-weight:600}
+.note{font-size:13px;color:var(--muted);margin:0;line-height:1.5}
+.log{font-size:13px;color:var(--muted);display:flex;flex-direction:column;gap:4px;margin:0;padding-left:18px}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(260px + env(safe-area-inset-bottom,0px));background:var(--ivory);color:#1a1410;
+  padding:9px 16px;border-radius:999px;font-size:14px;z-index:30;transition:opacity .2s;pointer-events:none;max-width:90%;text-align:center}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<!-- HOME -->
+<div class="wrap home" id="home">
+  <h1 class="brand">โต๊ะชิปดีลเลอร์<small>ดีลเลอร์เปิดห้อง ผู้เล่นเข้ามาลงชิปเองจากมือถือ</small></h1>
+  <div class="card" id="resumeCard" hidden>
+    <h2>ห้องล่าสุด</h2>
+    <p class="note" id="resumeTxt"></p>
+    <button class="pay" id="resumeBtn">กลับเข้าห้อง</button>
+  </div>
+  <div class="card">
+    <h2>เข้าห้อง (ผู้เล่น)</h2>
+    <label class="field">รหัสห้อง<input class="code" id="jCode" maxlength="4" autocomplete="off" placeholder="ABCD"></label>
+    <label class="field">ชื่อของคุณ<input id="jName" maxlength="20" placeholder="ชื่อเล่น"></label>
+    <button class="pay" id="joinBtn">เข้าห้อง</button>
+  </div>
+  <div class="card">
+    <h2>เปิดห้องใหม่ (ดีลเลอร์)</h2>
+    <label class="field">ชิปเริ่มต้นต่อคน<input id="cStart" type="number" inputmode="numeric" value="1000"></label>
+    <button class="btn pri" id="createBtn">เปิดห้อง</button>
+  </div>
+</div>
+
+<!-- TABLE -->
+<div class="wrap" id="table" hidden>
+  <header>
+    <div class="hl"><span class="room" id="roomLbl">----</span><span class="hand" id="handLbl"></span></div>
+    <div class="hbtns">
+      <button class="ghost" id="inviteBtn">เชิญ</button>
+      <button class="ghost" id="undoBtn">↶ ย้อน</button>
+      <button class="ghost" id="setBtn">ตั้งค่า</button>
+      <button class="ghost" id="leaveBtn">ออก</button>
+    </div>
+  </header>
+  <div class="banner" id="banner" hidden></div>
+  <div class="pot"><small>POT</small><b id="potAmt">0</b><span class="sub" id="potSub"></span></div>
+  <div class="seats" id="seats"></div>
+</div>
+
+<div class="console" id="console" hidden><div class="in">
+  <div class="who"><span id="whoLbl"></span><span id="needLbl"></span></div>
+  <div class="chips">
+    <button class="chip" data-v="1">1</button><button class="chip" data-v="5">5</button>
+    <button class="chip" data-v="25">25</button><button class="chip" data-v="100">100</button>
+    <button class="chip" data-v="500">500</button>
+    <label class="amt"><input id="amt" type="number" inputmode="numeric" min="0" placeholder="0" aria-label="จำนวนชิป"><button id="clr" type="button">ล้าง</button></label>
+  </div>
+  <div class="acts">
+    <button class="btn warn" id="foldBtn">หมอบ</button>
+    <button class="btn" id="callBtn"><span id="callTx">ตาม</span><small id="callSm">–</small></button>
+    <button class="btn" id="allBtn">All-in<small id="allSm">–</small></button>
+    <button class="btn pri" id="betBtn">ลงชิป<small id="betSm">0</small></button>
+  </div>
+  <button class="pay" id="payBtn">จ่าย Pot / จบตา</button>
+</div></div>
+
+<div class="ov" id="payOv" hidden><div class="sheet" id="paySheet"></div></div>
+<div class="ov" id="setOv" hidden><div class="sheet" id="setSheet"></div></div>
+<div class="ov" id="invOv" hidden><div class="sheet">
+  <h2>เชิญผู้เล่นเข้าห้อง</h2>
+  <p class="note">ให้ผู้เล่นเปิดเว็บนี้แล้วใส่รหัสห้อง หรือส่งลิงก์ด้านล่างให้</p>
+  <div class="bigcode" id="invCode"></div>
+  <div class="linkbox" id="invLink"></div>
+  <button class="btn pri" id="copyBtn">คัดลอกลิงก์</button>
+  <button class="pay" id="invClose">เสร็จ</button>
+</div></div>
+<div class="toast" id="toast" style="opacity:0"></div>
+
+<script>
+const $=id=>document.getElementById(id);
+const fmt=n=>(+n||0).toLocaleString('en-US');
+const STORE='chip-room-v1';
+let me=null;        // {code,key,pid?,host?}
+let ST=null;        // server state
+let role='viewer';  // host | player | viewer
+let es=null,sel=null,busy=false;
+
+let tt;function toast(m){if(!m)return;const t=$('toast');t.textContent=m;t.style.opacity=1;clearTimeout(tt);tt=setTimeout(()=>t.style.opacity=0,1800);}
+function banner(m){const b=$('banner');b.textContent=m||'';b.hidden=!m;}
+function loadMe(){try{return JSON.parse(localStorage.getItem(STORE))}catch(e){return null}}
+function saveMe(v){try{v?localStorage.setItem(STORE,JSON.stringify(v)):localStorage.removeItem(STORE)}catch(e){}}
+
+async function api(path,body){
+  const r=await fetch(path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+  const j=await r.json().catch(()=>({error:'เซิร์ฟเวอร์ไม่ตอบ'}));
+  if(!r.ok)throw new Error(j.error||'เกิดข้อผิดพลาด');
+  return j;
+}
+async function act(type,extra={}){
+  if(busy)return;busy=true;render();
+  try{await api('/api/act',{code:me.code,key:me.key,type,hand:ST&&ST.hand,...extra});}
+  catch(e){toast(e.message);}
+  busy=false;render();
+}
+
+/* ---------- home ---------- */
+function showHome(){
+  if(es){es.close();es=null;}
+  ST=null;$('home').hidden=false;$('table').hidden=true;$('console').hidden=true;
+  const q=new URLSearchParams(location.search).get('room');
+  if(q)$('jCode').value=q.toUpperCase();
+  const m=loadMe();
+  $('resumeCard').hidden=!m;
+  if(m)$('resumeTxt').textContent='ห้อง '+m.code+(m.host?' · คุณเป็นดีลเลอร์':' · ผู้เล่น');
+}
+$('resumeBtn').onclick=()=>{const m=loadMe();if(m)enter(m);};
+$('createBtn').onclick=async()=>{
+  try{const j=await api('/api/create',{start:+$('cStart').value||1000});enter({code:j.code,key:j.key,host:true});setTimeout(()=>$('invOv').hidden=false,300);}
+  catch(e){toast(e.message);}
+};
+$('joinBtn').onclick=async()=>{
+  const code=$('jCode').value.trim().toUpperCase(),name=$('jName').value.trim();
+  if(code.length!==4){toast('ใส่รหัสห้อง 4 ตัว');return;}
+  if(!name){toast('ใส่ชื่อก่อน');return;}
+  try{const j=await api('/api/join',{code,name});enter({code:j.code,key:j.key,pid:j.pid});}
+  catch(e){toast(e.message);}
+};
+
+/* ---------- table ---------- */
+function enter(m){
+  me=m;saveMe(m);sel=null;
+  history.replaceState(null,'','/?room='+m.code);
+  $('home').hidden=true;$('table').hidden=false;
+  banner('กำลังเชื่อมต่อ…');
+  if(es)es.close();
+  es=new EventSource('/api/stream?code='+encodeURIComponent(m.code)+'&key='+encodeURIComponent(m.key));
+  es.onmessage=e=>{
+    const d=JSON.parse(e.data);
+    if(d.role)role=d.role;
+    ST=d.state;banner(role==='viewer'?'คุณดูได้อย่างเดียว เข้าห้องใหม่จากหน้าแรกเพื่อเล่น':'');
+    if(sel&&!ST.players.find(p=>p.id===sel))sel=null;
+    render();toast(d.msg);
+  };
+  es.onerror=()=>{
+    if(es.readyState===2){fetch('/api/act',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code:m.code})}).then(r=>{
+      if(r.status===404){saveMe(null);toast('ห้องนี้ปิดไปแล้ว');showHome();}
+      else{banner('การเชื่อมต่อหลุด กำลังลองใหม่…');setTimeout(()=>enter(m),2000);}
+    }).catch(()=>{banner('ออฟไลน์ กำลังลองใหม่…');setTimeout(()=>enter(m),3000);});}
+    else banner('การเชื่อมต่อหลุด กำลังลองใหม่…');
+  };
+}
+$('leaveBtn').onclick=()=>{saveMe(null);history.replaceState(null,'','/');showHome();};
+
+const P=id=>ST.players.find(p=>p.id===id);
+const pot=()=>ST.players.reduce((a,p)=>a+p.bet,0);
+const maxBet=()=>Math.max(0,...ST.players.map(p=>p.bet));
+const amtVal=()=>Math.max(0,Math.floor(+$('amt').value||0));
+
+function render(){
+  if(!ST)return;
+  const host=role==='host';
+  if(role==='player')sel=me.pid;
+  $('roomLbl').textContent='ห้อง '+ST.code;
+  const myP=role==='player'?P(me.pid):null;
+  $('handLbl').innerHTML='';$('handLbl').append('ตาที่ '+ST.hand+' · ');
+  const r=document.createElement('b');r.textContent=host?'คุณคือดีลเลอร์':myP?'คุณ: '+myP.name:'ผู้ชม';$('handLbl').append(r);
+  $('inviteBtn').hidden=!host;$('undoBtn').hidden=!host;$('setBtn').hidden=!host;
+  $('undoBtn').disabled=!ST.canUndo||busy;
+  $('payBtn').hidden=!host;
+  $('console').hidden=!(host||myP);
+  if(role==='player'&&!myP)banner('ดีลเลอร์นำคุณออกจากโต๊ะแล้ว');
+  const pt=pot(),mb=maxBet();
+  $('potAmt').textContent=fmt(pt);
+  $('potSub').textContent=pt?'ยอดสูงสุดในตานี้ '+fmt(mb):'ยังไม่มีชิปในกอง';
+  const sc=$('seats');sc.innerHTML='';
+  if(!ST.players.length){const e=document.createElement('div');e.className='empty';e.textContent=host?'ยังไม่มีผู้เล่น กด "เชิญ" เพื่อส่งรหัสห้อง หรือเพิ่มผู้เล่นในตั้งค่า':'ยังไม่มีผู้เล่น';sc.appendChild(e);}
+  ST.players.forEach((p,i)=>{
+    const b=document.createElement('button');
+    b.className='seat'+(host&&p.id===sel?' sel':'')+(myP&&p.id===me.pid?' me':'')+(p.folded?' fold':'');
+    let tag='';
+    if(p.folded)tag='<span class="tag f">หมอบ</span>';
+    else if(p.chips===0&&p.bet>0)tag='<span class="tag a">ALL-IN</span>';
+    else if(p.chips===0)tag='<span class="tag o">หมดชิป</span>';
+    else if(i===ST.dealer%ST.players.length)tag='<span class="tag d">D</span>';
+    b.innerHTML=tag+'<span class="nm"></span><span class="ch">'+fmt(p.chips)+'</span><span class="bt">'+(p.bet?'ลงแล้ว <em>'+fmt(p.bet)+'</em>':'ยังไม่ลง')+'</span>';
+    const nm=b.querySelector('.nm');nm.textContent=p.name;
+    if(myP&&p.id===me.pid){const t=document.createElement('i');t.textContent='คุณ';nm.appendChild(t);}
+    else if(host&&p.remote){const t=document.createElement('i');t.textContent='● มือถือ';nm.appendChild(t);}
+    if(host)b.onclick=()=>{sel=p.id===sel?null:p.id;render();};else b.style.cursor='default';
+    sc.appendChild(b);
+  });
+  const p=sel&&P(sel),a=amtVal();
+  if(p){
+    $('whoLbl').innerHTML='';const bb=document.createElement('b');bb.textContent=host?p.name:'ชิปของคุณ';$('whoLbl').append(bb,' · มี '+fmt(p.chips));
+    const need=Math.min(mb-p.bet,p.chips);
+    $('needLbl').textContent=busy?'กำลังส่ง…':(need>0?'ต้องตามอีก '+fmt(need):'');
+    $('callTx').textContent=need>0?'ตาม':'เช็ค';$('callSm').textContent=need>0?fmt(need):'–';
+    $('allSm').textContent=fmt(p.chips);$('betSm').textContent=fmt(Math.min(a,p.chips));
+    $('foldBtn').textContent=p.folded?'กลับเข้าเล่น':'หมอบ';
+    $('foldBtn').disabled=busy;$('callBtn').disabled=busy||p.folded;$('allBtn').disabled=busy||p.folded||!p.chips;$('betBtn').disabled=busy||p.folded||!a||!p.chips;
+  }else{
+    $('whoLbl').textContent='แตะผู้เล่นเพื่อเลือก';$('needLbl').textContent='';
+    $('callTx').textContent='ตาม';['callSm','allSm'].forEach(k=>$(k).textContent='–');$('betSm').textContent=fmt(a);
+    $('foldBtn').textContent='หมอบ';
+    ['foldBtn','callBtn','allBtn','betBtn'].forEach(k=>$(k).disabled=true);
+  }
+  $('payBtn').disabled=!pt||busy;
+  if(!$('setOv').hidden&&!setEditing)drawSet();
+}
+
+document.querySelectorAll('.chip').forEach(c=>c.onclick=()=>{$('amt').value=amtVal()+(+c.dataset.v);render();});
+$('amt').oninput=render;
+$('clr').onclick=()=>{$('amt').value='';render();};
+const chipAct=(type,amount)=>{const p=P(sel);if(p)act(type,{pid:p.id,amount});};
+$('betBtn').onclick=()=>{const a=amtVal();$('amt').value='';chipAct('bet',a);};
+$('callBtn').onclick=()=>chipAct('call');
+$('allBtn').onclick=()=>chipAct('allin');
+$('foldBtn').onclick=()=>{const p=P(sel);if(p)chipAct(p.folded?'unfold':'fold');};
+$('undoBtn').onclick=()=>act('undo');
+
+/* ---------- invite ---------- */
+$('inviteBtn').onclick=()=>$('invOv').hidden=false;
+$('invClose').onclick=()=>$('invOv').hidden=true;
+function inviteLink(){return location.origin+'/?room='+(ST?ST.code:me.code);}
+new MutationObserver(()=>{if(!$('invOv').hidden&&me){$('invCode').textContent=ST?ST.code:me.code;$('invLink').textContent=inviteLink();}}).observe($('invOv'),{attributes:true});
+$('copyBtn').onclick=()=>{
+  const t=inviteLink();
+  if(navigator.clipboard)navigator.clipboard.writeText(t).then(()=>toast('คัดลอกแล้ว'),()=>selectLink());else selectLink();
+};
+function selectLink(){const r=document.createRange();r.selectNodeContents($('invLink'));const s=getSelection();s.removeAllRanges();s.addRange(r);toast('กดค้างที่ลิงก์เพื่อคัดลอก');}
+
+/* ---------- pay ---------- */
+function buildPots(){
+  const levels=[...new Set(ST.players.map(p=>p.bet).filter(b=>b>0))].sort((a,b)=>a-b);
+  const pots=[];let prev=0;
+  levels.forEach(L=>{
+    let amt=0;ST.players.forEach(p=>amt+=Math.min(p.bet,L)-Math.min(p.bet,prev));
+    const el=ST.players.filter(p=>!p.folded&&p.bet>=L).map(p=>p.id);
+    const last=pots[pots.length-1];
+    if(!el.length&&last)last.amount+=amt;
+    else if(last&&last.el.join()===el.join())last.amount+=amt;
+    else pots.push({amount:amt,el});
+    prev=L;
+  });
+  return pots;
+}
+let payPots=[];
+$('payBtn').onclick=()=>{payPots=buildPots().map(pt=>({...pt,win:pt.el.length===1?[...pt.el]:[]}));drawPay();$('payOv').hidden=false;};
+function drawPay(){
+  const sh=$('paySheet');sh.innerHTML='<h2>จ่าย Pot</h2>';
+  if(payPots.length>1){const n=document.createElement('p');n.className='note';n.textContent='มีคน All-in ยอดไม่เท่ากัน ระบบแยกเป็น '+payPots.length+' กองให้แล้ว เลือกผู้ชนะของแต่ละกอง';sh.appendChild(n);}
+  payPots.forEach((pt,i)=>{
+    const box=document.createElement('div');box.className='potbox';
+    const label=payPots.length===1?'Pot':(i===0?'Main pot':'Side pot '+i);
+    box.innerHTML='<div class="hd"><span>'+label+'</span><b>'+fmt(pt.amount)+'</b></div>';
+    if(!pt.el.length){const n=document.createElement('p');n.className='note';n.textContent='ทุกคนหมอบ เลือกคนรับกองนี้';box.appendChild(n);}
+    const pills=document.createElement('div');pills.className='pills';
+    (pt.el.length?pt.el:ST.players.map(p=>p.id)).forEach(id=>{
+      const pl=P(id);if(!pl)return;
+      const b=document.createElement('button');b.className='pill'+(pt.win.includes(id)?' on':'');b.textContent=pl.name;
+      b.onclick=()=>{pt.win=pt.win.includes(id)?pt.win.filter(x=>x!==id):[...pt.win,id];drawPay();};
+      pills.appendChild(b);
+    });
+    box.appendChild(pills);
+    if(pt.win.length>1){const n=document.createElement('p');n.className='note';const s=Math.floor(pt.amount/pt.win.length);n.textContent='แบ่งคนละ '+fmt(s);box.appendChild(n);}
+    else if(pt.el.length===1){const n=document.createElement('p');n.className='note';n.textContent='มีสิทธิ์คนเดียว คืนให้อัตโนมัติ';box.appendChild(n);}
+    sh.appendChild(box);
+  });
+  const row=document.createElement('div');row.className='acts';row.style.gridTemplateColumns='1fr 2fr';
+  row.innerHTML='<button class="btn" id="pCancel">ยกเลิก</button><button class="btn pri" id="pOk">ยืนยันจ่ายชิป</button>';
+  sh.appendChild(row);
+  $('pOk').disabled=!payPots.every(p=>p.win.length);
+  $('pCancel').onclick=()=>$('payOv').hidden=true;
+  $('pOk').onclick=()=>{$('payOv').hidden=true;sel=null;act('pay',{wins:payPots.map(p=>p.win)});};
+  const r2=document.createElement('button');r2.className='btn';r2.textContent='คืนชิปทุกคน (ยกเลิกตานี้)';
+  r2.onclick=()=>{$('payOv').hidden=true;act('refund');};
+  sh.appendChild(r2);
+}
+
+/* ---------- settings ---------- */
+let resetArm=false,setEditing=false;
+$('setBtn').onclick=()=>{resetArm=false;drawSet();$('setOv').hidden=false;};
+function drawSet(){
+  const sh=$('setSheet');sh.innerHTML='<h2>ตั้งค่าโต๊ะ</h2><h3>ผู้เล่นและชิป (แก้ยอดเพื่อเติมชิป)</h3>';
+  ST.players.forEach(p=>{
+    const r=document.createElement('div');r.className='row';
+    r.innerHTML='<input class="t" aria-label="ชื่อ"><input class="n" type="number" inputmode="numeric" aria-label="ชิป"><button class="x">ลบ</button>';
+    const [n,c,x]=r.children;n.value=p.name;c.value=p.chips;n.id='nm-'+p.id;c.id='ch-'+p.id;
+    [n,c].forEach(el=>{el.onfocus=()=>setEditing=true;el.onblur=()=>setTimeout(()=>setEditing=false,50);});
+    n.onchange=()=>act('setPlayer',{pid:p.id,name:n.value});
+    c.onchange=()=>act('setPlayer',{pid:p.id,chips:+c.value});
+    x.onclick=()=>act('removePlayer',{pid:p.id});
+    sh.appendChild(r);
+  });
+  const add=document.createElement('button');add.className='btn';add.textContent='+ เพิ่มผู้เล่นที่ไม่มีมือถือ (ดีลเลอร์ลงชิปให้)';
+  add.onclick=()=>act('addPlayer',{});
+  sh.appendChild(add);
+  const h=document.createElement('h3');h.textContent='ชิปเริ่มต้น (ใช้กับผู้เล่นใหม่และเกมใหม่)';sh.appendChild(h);
+  const r=document.createElement('div');r.className='row';r.innerHTML='<input class="n" id="startCh" type="number" inputmode="numeric" aria-label="ชิปเริ่มต้น">';
+  sh.appendChild(r);$('startCh').value=ST.start;$('startCh').onchange=e=>act('setStart',{start:+e.target.value});
+  const rs=document.createElement('button');rs.className='btn warn';rs.textContent=resetArm?'แตะอีกครั้งเพื่อยืนยัน: รีเซ็ตทุกคนเป็น '+fmt(ST.start):'เริ่มเกมใหม่';
+  rs.onclick=()=>{if(!resetArm){resetArm=true;drawSet();return;}resetArm=false;act('reset');};
+  sh.appendChild(rs);
+  if(ST.log.length){const h2=document.createElement('h3');h2.textContent='ประวัติล่าสุด';sh.appendChild(h2);const ul=document.createElement('ul');ul.className='log';ST.log.slice(0,12).forEach(l=>{const li=document.createElement('li');li.textContent=l;ul.appendChild(li);});sh.appendChild(ul);}
+  const total=ST.players.reduce((a,p)=>a+p.chips+p.bet,0);
+  const t=document.createElement('p');t.className='note';t.textContent='ชิปรวมบนโต๊ะ '+fmt(total);sh.appendChild(t);
+  const d=document.createElement('button');d.className='pay';d.textContent='เสร็จ';d.onclick=()=>$('setOv').hidden=true;sh.appendChild(d);
+}
+['payOv','setOv','invOv'].forEach(k=>$(k).addEventListener('click',e=>{if(e.target.id===k)$(k).hidden=true;}));
+
+/* ---------- start ---------- */
+(function(){
+  const q=new URLSearchParams(location.search).get('room');
+  const m=loadMe();
+  if(m&&(!q||q.toUpperCase()===m.code))enter(m);else showHome();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+{
+  "name": "dealer-chip-table",
+  "version": "1.0.0",
+  "description": "โต๊ะชิปดีลเลอร์: ดีลเลอร์เปิดห้อง ผู้เล่นเข้ามาลงชิปเองจากมือถือ",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "MIT"
+}
